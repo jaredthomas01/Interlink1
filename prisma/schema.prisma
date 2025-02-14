@@ -1,0 +1,182 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id               Int       @id @default(autoincrement())
+  email            String    @unique
+  password         String
+  role             UserRole
+  student          Student?
+  resetToken       String?   @unique
+  resetTokenExpiry DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
+
+model Organization {
+  id          Int          @id @default(autoincrement())
+  name        String
+  logo        String
+  banner      String
+  website     String
+  employees   String
+  email       String       @unique
+  address     String
+  contactInfo String
+  bio         String       @db.Text
+  departments Department[]
+  services    Service[]
+  locations   Location[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  deletedAt   DateTime?
+}
+
+model Department {
+  id             Int          @id @default(autoincrement())
+  name           String
+  organizationId Int
+  description    String       @db.Text
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  jobPostings    JobPosting[]
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  deletedAt      DateTime?
+
+  @@index([organizationId])
+}
+
+model Service {
+  id             Int          @id @default(autoincrement())
+  name           String
+  icon           String
+  organizationId Int
+  description    String       @db.Text
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  deletedAt      DateTime?
+
+  @@index([organizationId])
+}
+
+model Location {
+  id             Int          @id @default(autoincrement())
+  name           String
+  address        String?
+  city           String?
+  state          String?
+  zip            String?
+  country        String?
+  contactInfo    String?
+  organizationId Int
+  description    String       @db.Text
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  deletedAt      DateTime?
+
+  @@index([organizationId])
+}
+
+model JobPosting {
+  id                  Int            @id @default(autoincrement())
+  title               String
+  description         String         @db.Text
+  requirements        String         @db.Text
+  type                JobPostingType
+  location            JobLocation
+  skills              Skill[]
+  status              JobStatus      @default(PENDING)
+  applicationDeadline DateTime
+  departmentId        Int
+  department          Department     @relation(fields: [departmentId], references: [id])
+  applications        Application[]
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+  deletedAt           DateTime?
+
+  @@index([applicationDeadline])
+  @@index([departmentId])
+}
+
+model Skill {
+  id           Int         @id @default(autoincrement())
+  name         String
+  description  String      @db.Text
+  icon         String
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  JobPosting   JobPosting? @relation(fields: [jobPostingId], references: [id])
+  jobPostingId Int?
+}
+
+model Student {
+  id           Int           @id @default(autoincrement())
+  userId       Int           @unique
+  user         User          @relation(fields: [userId], references: [id])
+  name         String
+  phone        String
+  course       String
+  university   String
+  photo        String        @default("https://ui-avatars.com/api/?name=Future+Space&background=random&size=128&bold=true&color=fff")
+  bio          String        @db.Text
+  applications Application[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Application {
+  id           Int               @id @default(autoincrement())
+  coverLetter  String            @db.Text
+  resume       String            @db.Text
+  status       ApplicationStatus @default(PENDING)
+  studentId    Int
+  student      Student           @relation(fields: [studentId], references: [id])
+  jobPostingId Int
+  jobPosting   JobPosting        @relation(fields: [jobPostingId], references: [id])
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  @@index([studentId])
+  @@index([jobPostingId])
+}
+
+enum UserRole {
+  STUDENT
+  ORG_ADMIN
+  DEPT_ADMIN
+  SUPER_ADMIN
+}
+
+enum ApplicationStatus {
+  PENDING
+  UNDER_REVIEW
+  ACCEPTED
+  REJECTED
+}
+
+enum JobPostingType {
+  ATTACHMENT
+  INTERNSHIP
+  JOB
+}
+
+enum JobLocation {
+  ONSITE
+  REMOTE
+  HYBRID
+}
+
+enum JobStatus {
+  PENDING
+  ACTIVE
+  CLOSED
+}
