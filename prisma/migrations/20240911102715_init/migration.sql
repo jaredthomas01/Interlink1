@@ -1,3 +1,4 @@
+-- Active: 1739546720049@@127.0.0.1@3306@Intern
 -- CreateTable
 CREATE TABLE `User` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
