@@ -12,8 +12,9 @@ const Logo = () => {
 						FutureSpace{' '}
 					</a>
 					and{' '}
-					<a className={'text-blue-500'} href="https://stevetom.vercel.app">
-						kenTom
+					<a className={'text-blue-500'} href="#"> 
+						 {/* https://stevetom.vercel.app  */}
+						Jinela
 					</a>
 				</div>
 			</div>

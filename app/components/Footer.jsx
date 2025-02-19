@@ -2,8 +2,8 @@ import React from 'react';
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
-    const whatsappNumber = "+254758481320";
-    const emailAddress = "tomsteve187@gmail.com";
+    const whatsappNumber = "+254715661280";
+    const emailAddress = "jaredthomas570j@gmail.com";
 
     const whatsappMessage = encodeURIComponent("Hi InternLink! I'm interested in your services.");
     const emailSubject = encodeURIComponent("Inquiry about InternLink Services");
@@ -34,7 +34,7 @@ const Footer = () => {
                         <p className="mb-2"><i className="fas fa-map-marker-alt mr-2"></i>
                             Chuka University, Tharaka Nithi, Kenya
                         </p>
-                        <p className="mb-2"><i className="fas fa-phone mr-2"></i> +254 758 481 320</p>
+                        <p className="mb-2"><i className="fas fa-phone mr-2"></i> +254 715 661 280</p>
                         <p className="mb-4"><i className="fas fa-envelope mr-2"></i> {emailAddress}</p>
                         <div className="flex space-x-4 mb-4">
                             <a href={`https://wa.me/${whatsappNumber}?text=${whatsappMessage}`} target="_blank" rel="noopener noreferrer"
